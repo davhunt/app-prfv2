@@ -1,0 +1,35 @@
+/N/u/brlife/git/jsonlab
+commit 474d8c824800b5f2109c08f989085cb961acdbe3
+Merge: ae7a5d9 38b24fb
+Author: Qianqian Fang <fangqq@gmail.com>
+Date:   Wed Sep 6 13:01:57 2017 -0400
+
+    Merge pull request #41 from dasantonym/master
+    
+    added package.json to be able to intall via npm package manager
+/N/u/brlife/git/vistasoft
+commit b3823616ae64600a01f0223b6dba5279cf6cf3a7
+Merge: 8ce10bf 291190f
+Author: francopestilli <frakkopesto@gmail.com>
+Date:   Sun Mar 1 15:27:01 2020 -0500
+
+    Merge branch 'master' of https://github.com/vistalab/vistasoft
+/N/u/davhunt/Carbonate/gru
+commit b5f7d46a880f41ee754be821afbe57b022b2a795
+Author: Josh Wilson <josh@madeira.stanford.edu>
+Date:   Thu Mar 5 13:58:14 2020 -0800
+
+    Added threshold and PSE summary statistic comparison for mle, suboptimal and cue-switching models
+/N/u/davhunt/Carbonate/mgl
+commit b8b59ce43d90ebf9e00a7cacf01b3f36f9bb5197
+Author: Justin Gardner <jlg@stanford.edu>
+Date:   Thu Feb 27 13:23:09 2020 -0800
+
+    Adding ability to detect scroll events to mglListener
+/N/u/davhunt/Carbonate/mrTools
+commit b4330ea2b2c51d5f63b4c8788c93f1c86d61b704
+Author: JustinGardner <jshopsafe@me.com>
+Date:   Sat Feb 1 16:24:20 2020 -0800
+
+    Removing mrDisp function since fprintf now seems to do the right thing and not print a newline
+/N/u/davhunt/Carbonate/Downloads/NIfTI_matlab_tools
