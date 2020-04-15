@@ -48,9 +48,9 @@ maskedNiiPath = fullfile(cwd,'maskedNii.nii.gz');
 
 %results = analyzePRF(stimulus,maskedData,1,struct('seedmode',[-2],'display','off'));
 
-%results = mlrRunPRF(pwd,maskedNiiPath,stim,stimsize,'quickFit=1','doParallel=12');
+results = mlrRunPRF(cwd,maskedNiiPath,stim,stimsize,'quickFit=1','doParallel=12');
 %evalc(char("results = mlrRunPRF(cwd,maskedNiiPath,stim,stimsize,'quickFit=1','doParallel=12');")); % problems with displaying output to command window
-evalc("results = mlrRunPRF(cwd,maskedNiiPath,stim,stimsize,'quickFit=1','doParallel=12');");
+%evalc("results = mlrRunPRF(cwd,maskedNiiPath,stim,stimsize,'quickFit=1','doParallel=12');");
 
 % one final modification to the outputs:
 % whenever eccentricity is exactly 0, we set polar angle to NaN since it is ill-defined.
