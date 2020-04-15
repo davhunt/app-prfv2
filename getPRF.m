@@ -35,7 +35,14 @@ end
 maskedData = squeeze(maskedData);
 
 cwd = pwd;
-maskedNii = make_nii(maskedData);
+%maskedNii = make_nii(maskedData);
+maskedNii = nii;
+maskedNii.img = double(maskedData);
+%maskedNii.hdr.dime.dim(1) = 3;
+%maskedNii.hdr.dime.dim(5) = 1;
+maskedNii.hdr.dime.datatype = 64; %FLOAT64 img
+maskedNIi.hdr.dime.bitpix = 64;
+
 save_untouch_nii(maskedNii,'./maskedNii.nii.gz')
 maskedNiiPath = fullfile(cwd,'maskedNii.nii.gz');
 
@@ -46,7 +53,7 @@ evalc(char("results = mlrRunPRF(cwd,maskedNiiPath,stim,stimsize,'quickFit=1','do
 
 % one final modification to the outputs:
 % whenever eccentricity is exactly 0, we set polar angle to NaN since it is ill-defined.
-results.ang(results.ecc(:)==0) = NaN;
+results.polarAngle(results.eccentricity(:)==0) = NaN;
 
 [polarAngle, eccentricity, rfWidth, r2] = deal(zeros(size(data,1), size(data,2), size(data,3)));
 
