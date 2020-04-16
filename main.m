@@ -19,6 +19,7 @@ else
 end
 
 % compute pRF
-getPRF(config.fmri, config.stim, mask, [16.0 16.0]);
+%getPRF(config.fmri, config.stim, mask, [16.0 16.0]);
+getPRF('bold.nii.gz','stim.nii.gz',mask, [16.0 16.0]);
 
 end
