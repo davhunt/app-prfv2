@@ -11,6 +11,9 @@ export SINGULARITYENV_PROCESS_COUNT=4
 fmri=`jq -r .fmri config.json`
 stim=`jq -r .stim config.json`
 fsdir=`jq -r .output config.json`
+cp $fmri ./bold.nii.gz
+cp $stim ./stim.nii.gz
+cp -R $fsdir ./output
 
 echo "converting aparc+aseg ROIs to nii"
 [ -z "$FREESURFER_LICENSE" ] && echo "Please set FREESURFER_LICENSE in .bashrc" && exit 1;
