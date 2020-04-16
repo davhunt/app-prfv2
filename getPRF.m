@@ -32,7 +32,8 @@ maskedData = zeros(size(r,1),size(data,4));
 for i = 1:size(r,1)
   maskedData(i,:) = data(r(i),c(i),v(i),:);
 end
-maskedData = squeeze(maskedData);
+%maskedData = squeeze(maskedData);
+maskedData = reshape(maskedData,[size(r,1) 1 1 size(data,4)]);
 
 cwd = pwd;
 %maskedNii = make_nii(maskedData);
@@ -41,7 +42,8 @@ maskedNii.img = double(maskedData);
 %maskedNii.hdr.dime.dim(1) = 3;
 %maskedNii.hdr.dime.dim(5) = 1;
 maskedNii.hdr.dime.datatype = 64; %FLOAT64 img
-maskedNIi.hdr.dime.bitpix = 64;
+maskedNii.hdr.dime.bitpix = 64;
+maskedNii.hdr.dime.dim = [4 size(r,1) 1 1 size(data,4) 1 1 1];
 
 save_untouch_nii(maskedNii,'./maskedNii.nii.gz')
 maskedNiiPath = fullfile(cwd,'maskedNii.nii.gz');
