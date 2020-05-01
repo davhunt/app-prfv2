@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -l nodes=1:ppn=12,vmem=120gb,walltime=9:00:00
+#PBS -l nodes=1:ppn=12,vmem=120gb,walltime=48:00:00
 #PBS -N pRF
 #PBS -V
 
@@ -19,7 +19,7 @@ echo "converting aparc+aseg ROIs to nii"
 [ -z "$FREESURFER_LICENSE" ] && echo "Please set FREESURFER_LICENSE in .bashrc" && exit 1;
 echo $FREESURFER_LICENSE > license.txt
 time singularity exec -e -B `pwd`/license.txt:/usr/local/freesurfer/license.txt docker://brainlife/freesurfer_on_mcr:6.0.2 \
-    bash -c "mri_convert $fsdir/mri/aparc+aseg.mgz ./aparc+aseg.nii.gz && mri_convert $fsdir/mri/T1.mgz ./T1.nii.gz"
+    bash -c "mri_convert $fsdir/mri/aparc+aseg.mgz ./aparc+aseg.nii.gz && mri_convert $fsdir/mri/T1.mgz ./T1.nii.gz && mri_binarize --i $fsdir/mri/aparc+aseg.mgz --o occipital_ctx.nii.gz --match 1011 2011 1008 2008 1005 2005 1021 2021 1029 2029 1013 2013 1009 2009"
 
 echo "creating mask"
 time singularity exec -e docker://brainlife/fsl:6.0.1 ./create_mask.sh $fmri
