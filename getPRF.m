@@ -33,25 +33,31 @@ for i = 1:size(r,1)
   maskedData(i,:) = data(r(i),c(i),v(i),:);
 end
 %maskedData = squeeze(maskedData);
-maskedData = reshape(maskedData,[size(r,1) 1 1 size(data,4)]);
-
 cwd = pwd;
+
+numColumns = ceil(size(maskedData,1)/32767);
+numRows = ceil(size(maskedData,1)/numColumns);
+numLeftover = mod((numColumns*numRows),size(maskedData,1));
+if numLeftover >= 1
+  maskedData(size(r,1)+1:size(r,1)+numLeftover,:) = 0;
+end
+maskedData = reshape(maskedData,[numRows numColumns 1 size(data,4)]);
+
 %maskedNii = make_nii(maskedData);
 maskedNii = nii;
+
 maskedNii.img = double(maskedData);
 %maskedNii.hdr.dime.dim(1) = 3;
 %maskedNii.hdr.dime.dim(5) = 1;
 maskedNii.hdr.dime.datatype = 64; %FLOAT64 img
 maskedNii.hdr.dime.bitpix = 64;
-maskedNii.hdr.dime.dim = [4 size(r,1) 1 1 size(data,4) 1 1 1];
+maskedNii.hdr.dime.dim = [4 numRows numColumns 1 size(data,4) 1 1 1];
 
 save_untouch_nii(maskedNii,'./maskedNii.nii.gz')
 maskedNiiPath = fullfile(cwd,'maskedNii.nii.gz');
 
 %results = analyzePRF(stimulus,maskedData,1,struct('seedmode',[-2],'display','off'));
-disp('pRF path: ')
-which pRF
-results = mlrRunPRF(cwd,maskedNiiPath,stim,stimsize,'quickFit=0','doParallel=12');
+results = mlrRunPRF(cwd,maskedNiiPath,stim,stimsize,'quickFit=1','doParallel=12');
 %evalc(char("results = mlrRunPRF(cwd,maskedNiiPath,stim,stimsize,'quickFit=1','doParallel=12');")); % problems with displaying output to command window
 %evalc("results = mlrRunPRF(cwd,maskedNiiPath,stim,stimsize,'quickFit=1','doParallel=12');");
 
@@ -61,18 +67,22 @@ results.polarAngle(results.eccentricity(:)==0) = NaN;
 
 [polarAngle, eccentricity, rfWidth, r2] = deal(zeros(size(data,1), size(data,2), size(data,3)));
 
-m = 1;
 for k = 1:size(maskBool,3)
   for j = 1:size(maskBool,2)
     for i = 1:size(maskBool,1)
-      if maskBool(i,j,k) >= 1.0
-        polarAngle(i,j,k) = results.polarAngle(m);
-        eccentricity(i,j,k) = results.eccentricity(m);
-        rfWidth(i,j,k) = results.rfHalfWidth(m);
-        r2(i,j,k) = results.r2(m);
-        m = m+1; % increment to total voxels in mask
-      else
-        [polarAngle(i,j,k), eccentricity(i,j,k), rfWidth(i,j,k), r2(i,j,k)] = deal(NaN);
+      for c = 1:numColumns
+      m = 1;
+        while m <= numRows
+          if maskBool(i,j,k) >= 1.0
+            polarAngle(i,j,k) = results.polarAngle(m,c);
+            eccentricity(i,j,k) = results.eccentricity(m,c);
+            rfWidth(i,j,k) = results.rfHalfWidth(m,c);
+            r2(i,j,k) = results.r2(m,c);
+            m = m+1; % increment to total voxels in mask
+          else
+            [polarAngle(i,j,k), eccentricity(i,j,k), rfWidth(i,j,k), r2(i,j,k)] = deal(NaN);
+          end
+        end
       end
     end
   end
