@@ -67,22 +67,22 @@ results.polarAngle(results.eccentricity(:)==0) = NaN;
 
 [polarAngle, eccentricity, rfWidth, r2] = deal(zeros(size(data,1), size(data,2), size(data,3)));
 
+c = 1; r = 1;
 for k = 1:size(maskBool,3)
   for j = 1:size(maskBool,2)
     for i = 1:size(maskBool,1)
-      for c = 1:numColumns
-      m = 1;
-        while m <= numRows
-          if maskBool(i,j,k) >= 1.0
-            polarAngle(i,j,k) = results.polarAngle(m,c);
-            eccentricity(i,j,k) = results.eccentricity(m,c);
-            rfWidth(i,j,k) = results.rfHalfWidth(m,c);
-            r2(i,j,k) = results.r2(m,c);
-            m = m+1; % increment to total voxels in mask
-          else
-            [polarAngle(i,j,k), eccentricity(i,j,k), rfWidth(i,j,k), r2(i,j,k)] = deal(NaN);
-          end
-        end
+      if maskBool(i,j,k) >= 1.0
+        polarAngle(i,j,k) = results.polarAngle(r,c);
+        eccentricity(i,j,k) = results.eccentricity(r,c);
+        rfWidth(i,j,k) = results.rfHalfWidth(r,c);
+        r2(i,j,k) = results.r2(r,c);
+        r = r+1; % increment to total voxels in mask
+      else
+        [polarAngle(i,j,k), eccentricity(i,j,k), rfWidth(i,j,k), r2(i,j,k)] = deal(NaN);
+      end
+      if r == numRows
+        r = 1;
+        c = c+1;
       end
     end
   end
