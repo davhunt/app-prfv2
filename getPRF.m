@@ -80,7 +80,7 @@ for k = 1:size(maskBool,3)
       else
         [polarAngle(i,j,k), eccentricity(i,j,k), rfWidth(i,j,k), r2(i,j,k)] = deal(NaN);
       end
-      if r == numRows
+      if r == numRows+1
         r = 1;
         c = c+1;
       end
