@@ -26,7 +26,7 @@ time singularity exec -e docker://brainlife/fsl:6.0.1 ./create_mask.sh $fmri
 
 echo "running pRF"
 mkdir -p prf
-rm -rf ~/.mrDefaults.mat # remove .mrDefaults.mat in home directory
+[ -f ~/.mrDefaults.mat ] && rm -rf ~/.mrDefaults.mat # remove .mrDefaults.mat in home directory
 
 time singularity exec -e docker://brainlife/mcr:neurodebian1604-r2017a ./compiled/main
 if [ ! -s ./prf/r2.nii.gz ];
