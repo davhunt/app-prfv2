@@ -57,7 +57,7 @@ save_untouch_nii(maskedNii,'./maskedNii.nii.gz')
 maskedNiiPath = fullfile(cwd,'maskedNii.nii.gz');
 
 %results = analyzePRF(stimulus,maskedData,1,struct('seedmode',[-2],'display','off'));
-results = mlrRunPRF(cwd,maskedNiiPath,stim,stimsize,'quickFit=1','doParallel=12');
+results = mlrRunPRF(cwd,maskedNiiPath,stim,stimsize,'quickFit=0','doParallel=12');
 %evalc(char("results = mlrRunPRF(cwd,maskedNiiPath,stim,stimsize,'quickFit=1','doParallel=12');")); % problems with displaying output to command window
 %evalc("results = mlrRunPRF(cwd,maskedNiiPath,stim,stimsize,'quickFit=1','doParallel=12');");
 
