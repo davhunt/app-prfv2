@@ -65,6 +65,10 @@ results = mlrRunPRF(cwd,maskedNiiPath,stim,stimsize,'quickFit=0','doParallel=12'
 % whenever eccentricity is exactly 0, we set polar angle to NaN since it is ill-defined.
 results.polarAngle(results.eccentricity(:)==0) = NaN;
 
+% convert from radians to degrees, [-pi,pi] -> [0,360]
+results.polarAngle(results.polarAngle(:)<0) = results.polarAngle(results.polarAngle(:)<0)+2*pi;
+results.polarAngle = results.polarAngle*(180/pi);
+
 [polarAngle, eccentricity, rfWidth, r2] = deal(zeros(size(data,1), size(data,2), size(data,3)));
 
 c = 1; r = 1;
