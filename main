@@ -22,19 +22,25 @@ if $(jq -r .temporal config.json); then tempROIs="2001 2006 2007 2009 2015 2030 
 1001 1006 1007 1009 1015 1030 1033 1034 1035"; fi
 if $(jq -r .parietal config.json); then parietalROIs="2008 2017 2022 2025 2029 2031 1008 1017 1022 1025 1029 1031"; fi
 if $(jq -r .occipital config.json); then occipitalROIs="2005 2011 2013 2021 1005 1011 1013 1021"; fi
+
 [ -z "$FREESURFER_LICENSE" ] && echo "Please set FREESURFER_LICENSE in .bashrc" && exit 1;
 echo $FREESURFER_LICENSE > license.txt
-time singularity exec -e -B `pwd`/license.txt:/usr/local/freesurfer/license.txt docker://brainlife/freesurfer-mini:6.0.1 \
-    bash -c "mri_convert $fsdir/mri/aparc+aseg.mgz ./aparc+aseg.nii.gz && mri_convert ${fsdir}/mri/T1.mgz ./T1.nii.gz && \
-    mri_binarize --i ${fsdir}/mri/aparc+aseg.mgz --o occipital_ctx.nii.gz --match ${frontalROIs} ${tempROIs} ${parietalROIs} ${occipitalROIs}"
 
 echo "creating mask"
-time singularity exec -e docker://brainlife/fsl:6.0.1 ./create_mask.sh $fmri
+time singularity exec -e -B `pwd`/license.txt:/usr/local/freesurfer/license.txt docker://brainlife/freesurfer:6.0.0 bash -c \
+			"mri_convert ${fsdir}/mri/T1.mgz ./T1.nii.gz && \
+			mri_convert $fsdir/mri/aparc+aseg.mgz ./aparc+aseg.nii.gz && \
+			mri_binarize --i aparc+aseg.nii.gz --o ctx_ribbon.nii.gz --match ${frontalROIs} ${tempROIs} ${parietalROIs} ${occipitalROIs} && \
+			mri_vol2vol --mov ctx_ribbon.nii.gz --targ ${fmri} --interp nearest --regheader --o mask.nii.gz"
 
-echo "running pRF"
+
+#echo "creating mask"
+#time singularity exec -e docker://brainlife/fsl:6.0.1 ./create_mask.sh $fmri
+
 mkdir -p prf
 [ -f ~/.mrDefaults.mat ] && rm -rf ~/.mrDefaults.mat # remove .mrDefaults.mat in home directory
 
+echo "running pRF"
 time singularity exec -e docker://brainlife/mcr:neurodebian1604-r2017a ./compiled/main
 if [ ! -s ./prf/r2.nii.gz ];
 then
