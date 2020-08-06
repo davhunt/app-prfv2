@@ -6,8 +6,6 @@ log=compiled/commit_ids.txt
 true > $log
 echo "/N/u/brlife/git/jsonlab" >> $log
 (cd /N/u/brlife/git/jsonlab && git log -1) >> $log
-echo "/N/u/brlife/git/vistasoft" >> $log
-(cd /N/u/brlife/git/vistasoft && git log -1) >> $log
 echo "/N/u/davhunt/Carbonate/gru" >> $log
 (cd /N/u/davhunt/Carbonate/gru && git log -1) >> $log
 echo "/N/u/davhunt/Carbonate/mgl" >> $log
@@ -20,7 +18,6 @@ echo "/N/u/davhunt/Carbonate/Downloads/NIfTI_matlab_tools" >> $log
 mkdir -p compiled
 
 cat > build.m <<END
-addpath(genpath('/N/u/brlife/git/vistasoft'))
 addpath(genpath('/N/u/brlife/git/jsonlab'))
 addpath(genpath('/N/u/davhunt/Carbonate/gru'))
 addpath(genpath('/N/u/davhunt/Carbonate/mgl'))

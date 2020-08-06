@@ -1,71 +1,27 @@
 #!/bin/bash
-#PBS -l nodes=1:ppn=12,vmem=120gb,walltime=48:00:00
+#PBS -l nodes=1:ppn=12,vmem=120gb,walltime=1:00:00
 #PBS -N pRF
 #PBS -V
 
 set -e
 set -x
 
-export SINGULARITYENV_PROCESS_COUNT=4
-
-fmri=`jq -r .fmri config.json`
-stim=`jq -r .stim config.json`
-fsdir=`jq -r .output config.json`
+fmri=$(jq -r .fmri[] config.json)
+stim=$(jq -r .stim[] config.json)
+fsdir=$(jq -r .output config.json)
 preprocess=$(jq -r .preprocess config.json)
 TR=$(jq -r .TR config.json)
-cp $fmri ./bold.nii.gz
-cp $stim ./stim.nii.gz
-cp -R $fsdir ./output
 
 # do preprocessing if "preprocessing" tag not present
-inputs=$(jq -r ._inputs[].id config.json)
-i=0
-for input in ${inputs}; do
-  if [ $input = "fmri" ]; then
-    idx=${i}
-  fi
-  i=$(( $i + 1 ))
-done
-if [ ! -z $idx ] && [[ $(jq -r ._inputs[$idx].datatype_tags config.json) == *"preprocessed"* ]]; then
-  :
-elif $preprocess; then
-  if [ ! -z $(jq -r ._inputs[$idx].meta.EffectiveEchoSpacing config.json) ]; then
-    ES=$(jq -r ._inputs[$idx].meta.EffectiveEchoSpacing config.json)
-  else
-    ES=0.0005
-  fi
-  if [ ! -z $idx ] && $(jq '._inputs['$idx'].meta | .SliceTiming != null' config.json); then
-    ST=$(jq ._inputs[$idx].meta.SliceTiming[] config.json)
-    for t in ${ST}; do echo $t >> slicetiming.txt; done
-    do_stc=true
-  else
-    do_stc=false
-  fi
-  if [[ $TR == "" ]]; then TR=null; fi
-  time singularity exec -e docker://brainlife/fsl:6.0.1 ./preprocess_fmri.sh $fmri $ES $TR $do_stc
-  fmri=preprocessed_$(basename ${fmri})
-fi
-
-echo "converting aparc+aseg ROIs to nii"
-if $(jq -r .frontal config.json); then frontalROIs="2003 2012 2014 2017 2018 2019 2020 2024 2027 2028 2032 \
-1003 1012 1014 1017 1018 1019 1020 1024 1027 1028 1032"; fi
-if $(jq -r .temporal config.json); then tempROIs="2001 2006 2007 2009 2015 2016 2030 2033 2034 2035 \
-1001 1006 1007 1009 1015 1016 1030 1033 1034 1035"; fi
-if $(jq -r .parietal config.json); then parietalROIs="2008 2017 2022 2025 2029 2031 1008 1017 1022 1025 1029 1031"; fi
-if $(jq -r .occipital config.json); then occipitalROIs="2005 2011 2013 2021 1005 1011 1013 1021"; fi
+./preprocess.sh
 
 [ -z "$FREESURFER_LICENSE" ] && echo "Please set FREESURFER_LICENSE in .bashrc" && exit 1;
 echo $FREESURFER_LICENSE > license.txt
 
-time singularity exec -e -B `pwd`/license.txt:/usr/local/freesurfer/license.txt docker://brainlife/freesurfer:6.0.0 bash -c \
-			"mri_convert ${fsdir}/mri/T1.mgz ./T1.nii.gz && \
-			mri_convert $fsdir/mri/aparc+aseg.mgz ./aparc+aseg.nii.gz && \
-			mri_binarize --i aparc+aseg.nii.gz --o ctx_ribbon.nii.gz --match ${frontalROIs} ${tempROIs} ${parietalROIs} ${occipitalROIs} && \
-			mri_vol2vol --mov ctx_ribbon.nii.gz --targ ${fmri} --interp nearest --regheader --o mask.nii.gz"
-
-
-#echo "creating mask"
-#time singularity exec -e docker://brainlife/fsl:6.0.1 ./create_mask.sh $fmri
+if [ ! -f $(jq -r .mask config.json) ]; then
+  echo "creating mask"
+  time singularity exec -e -B `pwd`/license.txt:/usr/local/freesurfer/license.txt docker://brainlife/freesurfer:6.0.0 ./create_mask.sh $fsdir
+fi
 
 mkdir -p prf
 [ -f ~/.mrDefaults.mat ] && rm -rf ~/.mrDefaults.mat # remove .mrDefaults.mat in home directory

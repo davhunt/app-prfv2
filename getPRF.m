@@ -1,32 +1,37 @@
 function getPRF(fmri,stim,mask,stimsize)
 
-data = [];
-nii = load_untouch_nii(fmri);
-data = double(nii.img);
-
-%stimulus = {};
-%a1 = load_untouch_nii(stim);
-%stimulus{1} = double(a1.img);
-
-%pxtodeg = 16.0/200;
-
-maskBool = [];
-maskedData = [];
-a1 = load_untouch_nii(mask);
-maskBool = double(a1.img);
-
-for i = 1:size(data,1)
-  for j = 1:size(data,2)
-    for k = 1:size(data,3)
-      if maskBool(i,j,k) >= 1.0
-        maskBool(i,j,k) = 1.0;	% create binary mask
-      end
-    end
-  end
+if length(fmri) ~= length(stim)
+  error('must input one stimulus for each fmri run')
 end
+
+data = {};
+stimulus = {};
+
+for p=1:length(fmri)
+  a1 = load_untouch_nii(char(fmri{p}));
+  data{p} = a1.img;
+  a1 = load_untouch_nii(char(stim{p}));
+  stimulus{p} = a1.img;
+end
+
+data = cat(4, data{:}); % combine runs into 1 file
+stimulus = cat(3, stimulus{:});
+
+a1 = load_untouch_nii(char(stim{1}));
+a1.hdr.dime.dim(4) = size(stimulus,3); % change #TRs in header to combined total across runs
+a1.img = stimulus;
+save_untouch_nii(a1, './stim.nii.gz');
+stimPath = fullfile(pwd,'stim.nii.gz');
+
+pxtodeg = 16.0/200;
+
+a1 = load_untouch_nii(mask);
+maskBool = a1.img;
+maskBool(maskBool >= 1) = 1.0;	% create binary mask
 maskBool = logical(maskBool);
 
 [r,c,v] = ind2sub(size(maskBool),find(maskBool));
+
 
 maskedData = zeros(size(r,1),size(data,4));
 for i = 1:size(r,1)
@@ -44,7 +49,7 @@ end
 maskedData = reshape(maskedData,[numRows numColumns 1 size(data,4)]);
 
 %maskedNii = make_nii(maskedData);
-maskedNii = nii;
+maskedNii = load_untouch_nii(char(fmri{1}));
 
 maskedNii.img = double(maskedData);
 %maskedNii.hdr.dime.dim(1) = 3;
@@ -53,11 +58,11 @@ maskedNii.hdr.dime.datatype = 64; %FLOAT64 img
 maskedNii.hdr.dime.bitpix = 64;
 maskedNii.hdr.dime.dim = [4 numRows numColumns 1 size(data,4) 1 1 1];
 
-save_untouch_nii(maskedNii,'./maskedNii.nii.gz')
-maskedNiiPath = fullfile(cwd,'maskedNii.nii.gz');
+save_untouch_nii(maskedNii,'./maskedNii.nii.gz');
+maskedNiiPath = fullfile(pwd,'maskedNii.nii.gz');
 
 %results = analyzePRF(stimulus,maskedData,1,struct('seedmode',[-2],'display','off'));
-results = mlrRunPRF(cwd,maskedNiiPath,stim,stimsize,'quickFit=0','doParallel=12');
+results = mlrRunPRF(cwd,maskedNiiPath,stimPath,stimsize,'quickFit=1','doParallel=12');
 %evalc(char("results = mlrRunPRF(cwd,maskedNiiPath,stim,stimsize,'quickFit=1','doParallel=12');")); % problems with displaying output to command window
 %evalc("results = mlrRunPRF(cwd,maskedNiiPath,stim,stimsize,'quickFit=1','doParallel=12');");
 
@@ -92,10 +97,20 @@ for k = 1:size(maskBool,3)
   end
 end
 
-nii.hdr.dime.dim(1) = 3;
-nii.hdr.dime.dim(5) = 1;
-nii.hdr.dime.datatype = 64; %FLOAT64 img
-nii.hdr.dime.bitpix = 64;
+nii = load_untouch_nii(char(fmri{1}));
+%voxRes = a1.hdr.dime.pixdim(2:4) % voxel resolution of original fMRI
+datatype = 64; % float64
+origin = [0 0 0]; % voxels start at 0 0 0
+%nii = make_nii(r2,voxRes,origin,datatype);
+
+nii.hdr.dime.datatype = 64; nii.hdr.dime.bitpix = 64; % float64
+nii.hdr.dime.dim(1) = 3; nii.hdr.dime.dim(5) = 1;
+nii.hdr.dime.scl_slope = 0; nii.hdr.dime.scl_inter = 0;
+nii.hdr.dime.glmax = 0; nii.hdr.dime.glmin = 0; % just set to 0
+
+
+%nii.hdr.dime.pixdim(1) = a1.hdr.dime.pixdim(1); % should be 1 or -1?
+%nii.hdr.dime.xyzt_units = a1.hdr.dime.xyzt_units; % millimeters x seconds
 
 nii.img = polarAngle;
 save_untouch_nii(nii,['prf/polarAngle.nii.gz']);
