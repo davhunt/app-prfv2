@@ -12,3 +12,5 @@ mris_convert --to-scanner $fsdir/surf/lh.sphere prf/surfaces/lh.sphere.vtk
 mris_convert --to-scanner $fsdir/surf/rh.sphere prf/surfaces/rh.sphere.vtk
 mris_convert --to-scanner $fsdir/surf/lh.inflated prf/surfaces/lh.inflated.vtk
 mris_convert --to-scanner $fsdir/surf/rh.inflated prf/surfaces/rh.inflated.vtk
+mris_convert --to-scanner $fsdir/surf/lh.sphere.reg prf/surfaces/lh.sphere.reg.vtk
+mris_convert --to-scanner $fsdir/surf/rh.sphere.reg prf/surfaces/rh.sphere.reg.vtk
