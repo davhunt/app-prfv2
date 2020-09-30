@@ -3,9 +3,9 @@ function [] = main()
 if ~isdeployed
 	disp('loading paths for IUHPC')
 	addpath(genpath('/N/u/brlife/git/jsonlab'))
-	addpath(genpath('/N/u/davhunt/Carbonate/gru'))
-	addpath(genpath('/N/u/davhunt/Carbonate/mgl'))
-	addpath(genpath('/N/u/davhunt/Carbonate/mrTools'))
+	addpath(genpath('gru'))
+	addpath(genpath('mgl'))
+	addpath(genpath('mrTools'))
         addpath(genpath('/N/u/brlife/git/NIfTI'))
 end
 

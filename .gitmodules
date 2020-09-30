@@ -1,0 +1,9 @@
+[submodule "gru"]
+	path = gru
+	url = https://github.com/justingardner/gru
+[submodule "mgl"]
+	path = mgl
+	url = https://github.com/justingardner/mgl
+[submodule "mrTools"]
+	path = mrTools
+	url = https://github.com/justingardner/mrTools
