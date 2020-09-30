@@ -25,4 +25,4 @@ Author: JustinGardner <jshopsafe@me.com>
 Date:   Sat Feb 1 16:24:20 2020 -0800
 
     Removing mrDisp function since fprintf now seems to do the right thing and not print a newline
-/N/u/davhunt/Carbonate/Downloads/NIfTI_matlab_tools
+/N/u/brlife/git/NIfTI

@@ -6,7 +6,7 @@ if ~isdeployed
 	addpath(genpath('/N/u/davhunt/Carbonate/gru'))
 	addpath(genpath('/N/u/davhunt/Carbonate/mgl'))
 	addpath(genpath('/N/u/davhunt/Carbonate/mrTools'))
-        addpath(genpath('/N/u/davhunt/Carbonate/Downloads/NIfTI_matlab_tools'))
+        addpath(genpath('/N/u/brlife/git/NIfTI'))
 end
 
 % load my own config.json
@@ -18,7 +18,6 @@ else
 end
 
 % compute pRF
-getPRF(config.fmri, config.stim, mask, [16.0 16.0]);
-%getPRF('bold.nii.gz','stim.nii.gz',mask, [16.0 16.0]);
+getPRF(config.fmri, config.stim, mask, [16.0 16.0]); % TODO make configurable
 
 end

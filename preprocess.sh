@@ -3,20 +3,18 @@
 fmri=$(jq -r '.fmri[]' config.json)
 time singularity exec -e docker://brainlife/dipy:1.1.1 python3 combine_fmri.py ${fmri}
 
-# check for "preprocessed" tag on input, otherwise preprocess if requested
 inputs=$(jq -r ._inputs[].id config.json)
 i=0
 for input in ${inputs}; do
   if [ $input = "fmri" ]; then
-    idx=${i}
+    idx=${i} # where fmri input is in config.json
   fi
   i=$(( $i + 1 ))
 done
-#if [ ! -z $idx ] && [[ $(jq -r ._inputs[$idx].datatype_tags[] config.json) == *"preprocessed"* ]]; then
 
+# check for "preprocessed" tag on input, otherwise preprocess if requested
 preprocess=$(jq -r '.preprocess' config.json)
 if $preprocess && [[ ! $(jq -r ._inputs[$idx].datatype_tags[] config.json) == *"preprocessed"* ]]; then
-#elif $preprocess; then
   if [ ! -z $(jq -r ._inputs[$idx].meta.EffectiveEchoSpacing config.json) ]; then
     ES=$(jq -r ._inputs[$idx].meta.EffectiveEchoSpacing config.json)
   else
@@ -40,7 +38,6 @@ if $preprocess && [[ ! $(jq -r ._inputs[$idx].datatype_tags[] config.json) == *"
   num_runs=$(jq -r '.fmri | length' config.json)
 
   for i in $(seq 1 $num_runs); do
-    #new_fmri="${new_fmri}, \"$(jq -r ".fmri[$i]" config.json)\""; done
     new_fmri="${new_fmri}, \"preproc_bold_${i}.nii.gz\""; done
   jq ".fmri = [ ${new_fmri:2} ]" config.json > temp.json
   mv config.json config_original.json && mv temp.json config.json

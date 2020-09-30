@@ -2,6 +2,7 @@
 
 fsdir=${1}
 
+# ROIs by lobe for mask https://surfer.nmr.mgh.harvard.edu/fswiki/FsTutorial/AnatomicalROI/FreeSurferColorLUT
 [[ $(jq -r .frontal config.json) == true ]] && frontalROIs="2003 2012 2014 2017 2018 2019 2020 2024 2027 2028 2032 \
   1003 1012 1014 1017 1018 1019 1020 1024 1027 1028 1032"
 [[ $(jq -r .temporal config.json) == true ]] && tempROIs="2001 2006 2007 2009 2015 2016 2030 2033 2034 2035 \
