@@ -1,7 +1,11 @@
-function getPRF(fmri,stim,mask,stimsize)
+function getPRF(fmri, stim, mask, TR, stimsizeX, stimsizeY)
 
 if length(fmri) ~= length(stim)
   error('must input one stimulus for each fmri run')
+end
+
+if isempty(stimsizeX) || isempty(stimsizeY)    % size of stimulus in degrees
+  error('size of visual stimulus in degrees not specified')
 end
 
 data = {};
@@ -14,16 +18,16 @@ for p=1:length(fmri)
   stimulus{p} = a1.img;
 end
 
+
+
 data = cat(4, data{:}); % combine runs into 1 file
 stimulus = cat(3, stimulus{:});
 
 a1 = load_untouch_nii(char(stim{1}));
-a1.hdr.dime.dim(4) = size(stimulus,3); % change #TRs in header to combined total across runs
+a1.hdr.dime.dim(4) = size(stimulus,3); % change # time points in header to combined total across runs
 a1.img = stimulus;
 save_untouch_nii(a1, './stim.nii.gz');
 stimPath = fullfile(pwd,'stim.nii.gz');
-
-pxtodeg = 16.0/200;
 
 a1 = load_untouch_nii(mask);
 maskBool = a1.img;
@@ -51,6 +55,11 @@ maskedData = reshape(maskedData,[numRows numColumns 1 size(data,4)]);
 %maskedNii = make_nii(maskedData);
 maskedNii = load_untouch_nii(char(fmri{1}));
 
+if ~isempty(TR) && a1.hdr.dime.pixdim(5) ~= TR % check for frame rate / repetition time in FMRI nifti
+  warning(sprintf('TR in the fMRI nifti header %d does not match the TR inputted %d. Using TR inputted',maskedNii.hdr.dime.pixdim(5),TR))
+  maskedNii.hdr.dime.pixdim(5) = TR;
+end
+
 maskedNii.img = double(maskedData);
 %maskedNii.hdr.dime.dim(1) = 3;
 %maskedNii.hdr.dime.dim(5) = 1;
@@ -62,9 +71,7 @@ save_untouch_nii(maskedNii,'./maskedNii.nii.gz');
 maskedNiiPath = fullfile(pwd,'maskedNii.nii.gz');
 
 %results = analyzePRF(stimulus,maskedData,1,struct('seedmode',[-2],'display','off'));
-results = mlrRunPRF(cwd,maskedNiiPath,stimPath,stimsize,'quickFit=1','doParallel=12');
-%evalc(char("results = mlrRunPRF(cwd,maskedNiiPath,stim,stimsize,'quickFit=1','doParallel=12');")); % problems with displaying output to command window
-%evalc("results = mlrRunPRF(cwd,maskedNiiPath,stim,stimsize,'quickFit=1','doParallel=12');");
+results = mlrRunPRF(cwd,maskedNiiPath,stimPath,[stimsizeX stimsizeY],'quickFit=1','doParallel=12');
 
 % one final modification to the outputs:
 % whenever eccentricity is exactly 0, we set polar angle to NaN since it is ill-defined.

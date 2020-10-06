@@ -18,6 +18,5 @@ else
 end
 
 % compute pRF
-getPRF(config.fmri, config.stim, mask, [16.0 16.0]); % TODO make configurable
-
+getPRF(config.fmri, config.stim, mask, config.TR, config.stimsizeX, config.stimsizeY);
 end
