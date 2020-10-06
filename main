@@ -10,7 +10,7 @@ fmri=$(jq -r .fmri[] config.json)
 stim=$(jq -r .stim[] config.json)
 fsdir=$(jq -r .output config.json)
 preprocess=$(jq -r .preprocess config.json)
-TR=$(jq -r .TR config.json)
+export TR=$(jq -r .TR config.json)
 
 # do preprocessing if "preprocessing" tag not present
 ./preprocess.sh
