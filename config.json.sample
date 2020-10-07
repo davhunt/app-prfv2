@@ -4,18 +4,24 @@
     "temporal": false,
     "occipital": true,
     "preprocess": true,
-    "TR": 1,
+    "TR": 1.0,
+    "stimsizeX": 16.0,
+    "stimsizeY": 16.0,
     "fmri": [
-        "./test/run1.nii.gz",
-        "./test/run2.nii.gz",
-        "./test/run3.nii.gz",
-        "./test/run4.nii.gz"
+        "./test/RETCW.nii.gz",
+        "./test/RETEXP.nii.gz",
+        "./test/RETCON.nii.gz",
+        "./test/RETBAR.nii.gz",
+        "./test/RETWEDGERING.nii.gz",
+        "./test/RETCCW.nii.gz"
     ],
     "stim": [
-        "./test/stim1.nii.gz",
-        "./test/stim2.nii.gz",
-        "./test/stim3.nii.gz",
-        "./test/stim4.nii.gz"
+        "./test/RETCWsmall_norm.nii.gz",
+        "./test/RETEXPsmall_norm.nii.gz",
+        "./test/RETCONsmall_norm.nii.gz",
+        "./test/RETBARsmall_norm.nii.gz",
+        "./test/RETWEDGERINGsmall_norm.nii.gz",
+        "./test/RETCCWsmall_norm.nii.gz"
     ],
     "output": "test/output"
 }
