@@ -7,13 +7,13 @@ true > $log
 echo "/N/u/brlife/git/jsonlab" >> $log
 (cd /N/u/brlife/git/jsonlab && git log -1) >> $log
 echo "gru" >> $log
-(cd /N/u/davhunt/Carbonate/gru && git log -1) >> $log
+(cd gru && git log -1) >> $log
 echo "mgl" >> $log
-(cd /N/u/davhunt/Carbonate/mgl && git log -1) >> $log
+(cd mgl && git log -1) >> $log
 echo "mrTools" >> $log
-(cd /N/u/davhunt/Carbonate/mrTools && git log -1) >> $log
+(cd mrTools && git log -1) >> $log
 echo "/N/u/brlife/git/NIfTI" >> $log
-(cd /N/u/davhunt/Carbonate/NIfTI_cifti_matlab_tools && git log -1) >> $log
+(cd /N/u/brlife/git/NIfTI && git log -1) >> $log
 
 mkdir -p compiled
 

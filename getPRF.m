@@ -55,7 +55,7 @@ maskedData = reshape(maskedData,[numRows numColumns 1 size(data,4)]);
 %maskedNii = make_nii(maskedData);
 maskedNii = load_untouch_nii(char(fmri{1}));
 
-if ~isempty(TR) && a1.hdr.dime.pixdim(5) ~= TR % check for frame rate / repetition time in FMRI nifti
+if ~isempty(TR) && maskedNii.hdr.dime.pixdim(5) ~= TR % check for frame rate / repetition time in FMRI nifti
   warning(sprintf('TR in the fMRI nifti header %d does not match the TR inputted %d. Using TR inputted',maskedNii.hdr.dime.pixdim(5),TR))
   maskedNii.hdr.dime.pixdim(5) = TR;
 end
