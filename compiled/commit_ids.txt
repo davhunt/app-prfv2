@@ -20,9 +20,9 @@ Date:   Tue Jun 9 17:10:36 2020 -0700
 
     Recompiled for scroll
 mrTools
-commit b4330ea2b2c51d5f63b4c8788c93f1c86d61b704
-Author: JustinGardner <jshopsafe@me.com>
-Date:   Sat Feb 1 16:24:20 2020 -0800
+commit ad190e2f6fa6e3d844d9a2a93873f1d7eada7c0d
+Author: David Hunt <davhunt@indiana.edu>
+Date:   Thu Oct 8 15:20:11 2020 -0400
 
-    Removing mrDisp function since fprintf now seems to do the right thing and not print a newline
+    add semicolon to avoid horzcat Error
 /N/u/brlife/git/NIfTI

@@ -4,3 +4,6 @@
 [submodule "mgl"]
 	path = mgl
 	url = https://github.com/justingardner/mgl
+[submodule "mrTools"]
+	path = mrTools
+	url = https://github.com/davhunt/mrTools
