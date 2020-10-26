@@ -11,4 +11,3 @@ rm aparc+aseg.nii.gz
 rm ctx_ribbon*.nii.gz
 rm ?h.ribbon.nii.gz
 rm prob_mask.nii.gz
-

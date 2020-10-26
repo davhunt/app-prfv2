@@ -17,6 +17,12 @@ else
   mask = fullfile(pwd,'mask.nii.gz');
 end
 
+if config.quickFit
+  quickFit = 1;
+else
+  quickFit = 0;
+end
+
 % compute pRF
-getPRF(config.fmri, config.stim, mask, config.TR, config.stimsizeX, config.stimsizeY);
+getPRF(config.fmri, config.stim, mask, config.quickFit, config.TR, config.stimsizeX, config.stimsizeY, config.gsr);
 end

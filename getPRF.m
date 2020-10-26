@@ -1,4 +1,4 @@
-function getPRF(fmri, stim, mask, TR, stimsizeX, stimsizeY)
+function getPRF(fmri, stim, mask, quickFit, TR, stimsizeX, stimsizeY, gsr)
 
 if length(fmri) ~= length(stim)
   error('must input one stimulus for each fmri run')
@@ -52,6 +52,8 @@ if numLeftover >= 1
 end
 maskedData = reshape(maskedData,[numRows numColumns 1 size(data,4)]);
 
+maskedData = globalRegress(maskedData, gsr); % do global signal regression if wanted
+
 %maskedNii = make_nii(maskedData);
 maskedNii = load_untouch_nii(char(fmri{1}));
 
@@ -71,7 +73,7 @@ save_untouch_nii(maskedNii,'./maskedNii.nii.gz');
 maskedNiiPath = fullfile(pwd,'maskedNii.nii.gz');
 
 %results = analyzePRF(stimulus,maskedData,1,struct('seedmode',[-2],'display','off'));
-results = mlrRunPRF(cwd,maskedNiiPath,stimPath,[stimsizeX stimsizeY],'quickFit=1','doParallel=12');
+results = mlrRunPRF(cwd,maskedNiiPath,stimPath,[stimsizeX stimsizeY],['quickFit=' num2str(quickFit)],'doParallel=12');
 
 % one final modification to the outputs:
 % whenever eccentricity is exactly 0, we set polar angle to NaN since it is ill-defined.
