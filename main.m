@@ -24,5 +24,5 @@ else
 end
 
 % compute pRF
-getPRF(config.fmri, config.stim, mask, config.quickFit, config.TR, config.stimsizeX, config.stimsizeY, config.gsr);
+getPRF(config.fmri, config.stim, mask, quickFit, config.TR, config.stimsizeX, config.stimsizeY, config.gsr);
 end
