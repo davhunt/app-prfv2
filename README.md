@@ -1,5 +1,5 @@
 [![Abcdspec-compliant](https://img.shields.io/badge/ABCD_Spec-v1.1-green.svg)](https://github.com/brain-life/abcd-spec)
-[![Run on Brainlife.io](https://img.shields.io/badge/Brainlife-bl.app.1-blue.svg)](https://doi.org/10.25663/bl.app.1)
+[![Run on Brainlife.io](https://img.shields.io/badge/Brainlife-brainlife.app.315-blue.svg)](https://doi.org/10.25663/brainlife.app.315)
 
 # PRF analysis with mrTools
 
@@ -20,9 +20,22 @@ The stimulus stim.nii.gz must match the temporal dimension (TR) of the fMRI, and
 ### Project director
 - Franco Pestilli (franpest@indiana.edu)
 
-### Funding 
+### Funding Acknowledgement
+brainlife.io is publicly funded and for the sustainability of the project it is helpful to Acknowledge the use of the platform. We kindly ask that you acknowledge the funding below in your publications and code reusing this code.
+
 [![NSF-BCS-1734853](https://img.shields.io/badge/NSF_BCS-1734853-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1734853)
 [![NSF-BCS-1636893](https://img.shields.io/badge/NSF_BCS-1636893-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1636893)
+[![NSF-ACI-1916518](https://img.shields.io/badge/NSF_ACI-1916518-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1916518)
+[![NSF-IIS-1912270](https://img.shields.io/badge/NSF_IIS-1912270-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1912270)
+[![NIH-NIBIB-R01EB029272](https://img.shields.io/badge/NIH_NIBIB-R01EB029272-green.svg)](https://grantome.com/grant/NIH/R01-EB029272-01)
+
+### Citations
+We kindly ask that you cite the following articles when publishing papers and code using this code. 
+1. Gardner, Justin L., Merriam, Elisha P., Schluppeck, Denis, Besle, Julien, & Heeger, David J. (2018, June 28). mrTools: Analysis and visualization package for functional magnetic resonance imaging data (Version 4.7). Zenodo. [http://doi.org/10.5281/zenodo.1299483](http://doi.org/10.5281/zenodo.1299483)
+
+1. Avesani, P., McPherson, B., Hayashi, S. et al. The open diffusion data derivatives, brain data upcycling via integrated publishing of derivatives and reproducible open cloud services. Sci Data 6, 69 (2019). [https://doi.org/10.1038/s41597-019-0073-y](https://doi.org/10.1038/s41597-019-0073-y)
+
+#### MIT Copyright (c) 2020 brainlife.io The University of Texas at Austin and Indiana University
 
 ## Running the App 
 
@@ -34,7 +47,7 @@ In a 7T subject's "7T_RET_fixextended" folder, preprocessed retinotopy BOLD data
 
 ### On Brainlife.io
 
-You can submit this App online at [https://doi.org/10.25663/brainlife.app.177](https://doi.org/10.25663/brainlife.app.177) via the "Execute" tab.
+You can submit this App online at [https://doi.org/10.25663/brainlife.app.315](https://doi.org/10.25663/brainlife.app.315) via the "Execute" tab.
 
 ### Running Locally (on your machine)
 
@@ -62,6 +75,4 @@ All output files will be generated under the current working directory (pwd). Th
 
 This App only requires [singularity](https://www.sylabs.io/singularity/) to run.
 
-### References
-
-
+#### MIT Copyright (c) 2020 brainlife.io The University of Texas at Austin and Indiana University
