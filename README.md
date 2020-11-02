@@ -15,7 +15,7 @@ The stimulus stim.nii.gz must match the temporal dimension (TR) of the fMRI, and
 
 The fMRI data can optionally be preprocessed with slice-timing correction and head motion correction.
 
-Global signal regression of FMRI supported, converting signal to % change from baseline, either computing baseline for each voxel seperately (per-voxel normalization, pvn) or computing a global baseline (grand-mean scaling, gms).
+Global signal regression of FMRI supported, converting signal to % change from baseline, either computing baseline for each voxel seperately (per-voxel normalization, 'pvn') or computing a global baseline (grand-mean scaling, 'gms').
 
 ### Authors
 - Justin Gardner (jlg@stanford.edu)
@@ -34,7 +34,8 @@ brainlife.io is publicly funded and for the sustainability of the project it is 
 [![NIH-NIBIB-R01EB029272](https://img.shields.io/badge/NIH_NIBIB-R01EB029272-green.svg)](https://grantome.com/grant/NIH/R01-EB029272-01)
 
 ### Citations
-We kindly ask that you cite the following articles when publishing papers and code using this code. 
+We kindly ask that you cite the following articles when publishing papers and code using this code.
+
 1. Gardner, Justin L., Merriam, Elisha P., Schluppeck, Denis, Besle, Julien, & Heeger, David J. (2018, June 28). mrTools: Analysis and visualization package for functional magnetic resonance imaging data (Version 4.7). Zenodo. [http://doi.org/10.5281/zenodo.1299483](http://doi.org/10.5281/zenodo.1299483)
 
 1. Avesani, P., McPherson, B., Hayashi, S. et al. The open diffusion data derivatives, brain data upcycling via integrated publishing of derivatives and reproducible open cloud services. Sci Data 6, 69 (2019). [https://doi.org/10.1038/s41597-019-0073-y](https://doi.org/10.1038/s41597-019-0073-y)
@@ -99,7 +100,7 @@ You can submit this App online at [https://doi.org/10.25663/brainlife.app.315](h
 
 ## Output
 
-All output files will be generated under the current working directory (pwd). The main output of this App is the "prf" directory which contains NIFTI files polarAngle, eccentricity, receptive field size (rfWidth), R2, exponent, gain, and mean volume of each grayordinate.
+All output files will be generated under the current working directory (pwd). The main output of this App is the "prf" directory which contains NIFTI files polarAngle, eccentricity, receptive field size (rfWidth), and R2 of each voxel.
 
 ### Dependencies
 
