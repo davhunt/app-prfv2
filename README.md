@@ -82,6 +82,7 @@ You can submit this App online at [https://doi.org/10.25663/brainlife.app.315](h
       "testdata/run2/fmri/events.tsv",
       "testdata/run3/fmri/events.tsv",
       "testdata/run4/fmri/events.tsv"
+    ],
     "stim": [
       "testdata/run1/stim/stim.nii.gz",
       "testdata/run2/stim/stim.nii.gz",
