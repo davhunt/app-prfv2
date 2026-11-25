@@ -3,6 +3,59 @@
 
 # PRF analysis with mrTools
 
+<!-- brainlife-app:begin (generated from the App manifest; edit the manifest, not this block) -->
+
+> **Estimates voxel-wise population receptive fields (polar angle, eccentricity, size, R2) from retinotopy fMRI and its stimulus with the mrTools pRF model.**
+
+Fits the mrTools pRF model to each voxel of the fMRI time series given the stimulus aperture. Voxels are restricted to the provided mask or, if none, to the FreeSurfer cortical ribbon in the selected lobes (occipital by default). fMRI can optionally be slice-time and motion corrected and globally regressed. The stimulus must match the fMRI timing.
+
+| | |
+|---|---|
+| 📥 **Inputs** | `neuro/func/task` · `neuro/stimulus` · `neuro/freesurfer` · `neuro/mask` (optional) |
+| 📤 **Outputs** | `neuro/prf` |
+| 🐳 **Container** | `brainlife/freesurfer:6.0.0` |
+| ⚙️ **Resources** | 12 CPUs · 120 GB memory · 1 h walltime |
+| 🔑 **Requires** | `FREESURFER_LICENSE` |
+| 🔗 **Run it** | [doi.org/10.25663/brainlife.app.315](https://doi.org/10.25663/brainlife.app.315) |
+
+#### 📥 Inputs
+
+| Input | Datatype | Required | Description |
+|---|---|---|---|
+| `fMRI` | `neuro/func/task` | yes | Retinotopy task fMRI time series (bold). |
+| `stim` | `neuro/stimulus` | yes | Stimulus aperture as a pixelsX x pixelsY x time NIfTI with values in [0,1]. Must match the temporal dimension (TR) of the fMRI. |
+| `freesurfer` | `neuro/freesurfer` | yes | FreeSurfer subject directory, used to build the cortical mask and surfaces. |
+| `mask` | `neuro/mask` | no | Optional mask in fMRI space restricting the voxels analysed (for example V1). |
+
+#### 📤 Outputs
+
+| Output | Datatype | Description |
+|---|---|---|
+| `prf` | `neuro/prf` | pRF maps (r2, polar angle, eccentricity, receptive field size) as NIfTI, plus surface VTKs. |
+
+<details>
+<summary><b>⚙️ Parameters</b> (10)</summary>
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `frontal` | boolean | `false` | Include frontal cortex in mask |
+| `temporal` | boolean | `false` | Include temporal cortex in mask |
+| `parietal` | boolean | `false` | Include parietal cortex in mask |
+| `occipital` | boolean | `true` | Include occipital cortex in mask |
+| `preprocess` | boolean | `true` | Perform slice timing and head motion correction on fMRI before running prf |
+| `TR` | number |  | Repetition time of fMRI (read from the nii header if unspecified) |
+| `stimsizeX` | number | `16` | Width in degrees subtended of visual stimulus (16° for HCP) |
+| `stimsizeY` | number | `16` | Height in degrees subtended of visual stimulus (16° for HCP) |
+| `gsr` | enum | `none` | Specifies whether global signal regression (GSR) on input fMRI should be done, conversion to % change from baseline Options: `none`, `pvn`, `gms`. |
+| `quickFit` | boolean | `false` | Only do the grid search that finds approximately good parameters for the model and will not optimize with the nonlinear search. This will speed up the program but will not produce optimized fits. |
+
+</details>
+
+📚 **References used by this App:**
+- Gardner JL, Merriam EP, Schluppeck D, Besle J, Heeger DJ. mrTools: Analysis and visualization package for functional magnetic resonance imaging data (Version 4.7). Zenodo (2018).
+
+<!-- brainlife-app:end -->
+
 This app takes the time-series fMRI data of an individual subject performing a retinotopy task (bold.nii.gz), and derives voxel-wise pRF (population receptive field) measurements from their visual response to a stimulus (stim.nii.gz) using the [mrTools toolbox](https://github.com/justingardner/mrTools).
 
 Visually responsive voxels (or grayordinates) are analyzed and properties of each grayordinate is extracted from the fMRI data.  PRF measurements include the grayordinate's r^2 (variance explained), receptive field angle, eccentricity, and size (std of the Gaussian).
