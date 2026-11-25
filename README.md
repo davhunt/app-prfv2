@@ -1,7 +1,15 @@
-[![Abcdspec-compliant](https://img.shields.io/badge/ABCD_Spec-v1.1-green.svg)](https://github.com/brain-life/abcd-spec)
-[![Run on Brainlife.io](https://img.shields.io/badge/Brainlife-brainlife.app.315-blue.svg)](https://doi.org/10.25663/brainlife.app.315)
+<h1 align="center">pRFLife with mrTools</h1>
 
-# PRF analysis with mrTools
+<p align="center">
+  Estimates voxel-wise population receptive fields (polar angle, eccentricity, size, R2) from retinotopy fMRI and its stimulus with the mrTools pRF model.
+</p>
+
+<p align="center">
+  <a href="https://github.com/brainlife/abcd-spec"><img src="https://img.shields.io/badge/ABCD_Spec-v1.1-green.svg" alt="ABCD Spec v1.1"></a>
+  <a href="https://doi.org/10.25663/brainlife.app.315"><img src="https://img.shields.io/badge/Brainlife-brainlife.app.315-blue.svg" alt="Run on brainlife.io"></a>
+</p>
+
+## At a glance
 
 <!-- brainlife-app:begin (generated from the App manifest; edit the manifest, not this block) -->
 
@@ -11,14 +19,14 @@ Fits the mrTools pRF model to each voxel of the fMRI time series given the stimu
 
 | | |
 |---|---|
-| 📥 **Inputs** | `neuro/func/task` · `neuro/stimulus` · `neuro/freesurfer` · `neuro/mask` (optional) |
-| 📤 **Outputs** | `neuro/prf` |
-| 🐳 **Container** | `brainlife/freesurfer:6.0.0` |
-| ⚙️ **Resources** | 12 CPUs · 120 GB memory · 1 h walltime |
-| 🔑 **Requires** | `FREESURFER_LICENSE` |
-| 🔗 **Run it** | [doi.org/10.25663/brainlife.app.315](https://doi.org/10.25663/brainlife.app.315) |
+| **Inputs** | `neuro/func/task` · `neuro/stimulus` · `neuro/freesurfer` · `neuro/mask` (optional) |
+| **Outputs** | `neuro/prf` |
+| **Container** | `brainlife/freesurfer:6.0.0` |
+| **Resources** | 12 CPUs · 120 GB memory · 1 h walltime |
+| **Requires** | `FREESURFER_LICENSE` |
+| **Run it** | [doi.org/10.25663/brainlife.app.315](https://doi.org/10.25663/brainlife.app.315) |
 
-#### 📥 Inputs
+#### Inputs
 
 | Input | Datatype | Required | Description |
 |---|---|---|---|
@@ -27,14 +35,14 @@ Fits the mrTools pRF model to each voxel of the fMRI time series given the stimu
 | `freesurfer` | `neuro/freesurfer` | yes | FreeSurfer subject directory, used to build the cortical mask and surfaces. |
 | `mask` | `neuro/mask` | no | Optional mask in fMRI space restricting the voxels analysed (for example V1). |
 
-#### 📤 Outputs
+#### Outputs
 
 | Output | Datatype | Description |
 |---|---|---|
 | `prf` | `neuro/prf` | pRF maps (r2, polar angle, eccentricity, receptive field size) as NIfTI, plus surface VTKs. |
 
 <details>
-<summary><b>⚙️ Parameters</b> (10)</summary>
+<summary><b>Parameters</b> (10)</summary>
 
 | Parameter | Type | Default | Description |
 |---|---|---|---|
@@ -51,113 +59,94 @@ Fits the mrTools pRF model to each voxel of the fMRI time series given the stimu
 
 </details>
 
-📚 **References used by this App:**
-- Gardner JL, Merriam EP, Schluppeck D, Besle J, Heeger DJ. mrTools: Analysis and visualization package for functional magnetic resonance imaging data (Version 4.7). Zenodo (2018).
-
 <!-- brainlife-app:end -->
 
-This app takes the time-series fMRI data of an individual subject performing a retinotopy task (bold.nii.gz), and derives voxel-wise pRF (population receptive field) measurements from their visual response to a stimulus (stim.nii.gz) using the [mrTools toolbox](https://github.com/justingardner/mrTools).
+## Running the App
 
-Visually responsive voxels (or grayordinates) are analyzed and properties of each grayordinate is extracted from the fMRI data.  PRF measurements include the grayordinate's r^2 (variance explained), receptive field angle, eccentricity, and size (std of the Gaussian).
+### On brainlife.io
 
-[![pRF parameters](https://raw.githubusercontent.com/davhunt/pictures/master/Screenshot%20from%202019-04-17%2014-41-11.png)
+Open the App at [doi.org/10.25663/brainlife.app.315](https://doi.org/10.25663/brainlife.app.315), choose `neuro/func/task`, `neuro/stimulus`, `neuro/freesurfer`, `neuro/mask` from your project, set the parameters and press **Execute**. The results are saved to your project as `neuro/prf`.
 
-A mask (mask.nii.gz) in the same dimensions as the fMRI bold image can be passed in (V1, for example) to specify which voxels to analyze. Otherwise the cortical ribbon between white and pial surfaces from the Freesurfer, in the lobes specified (default: occipital) will be used by default.
+### Locally
 
-The stimulus stim.nii.gz must match the temporal dimension (TR) of the fMRI, and consists of a pixelsX x pixelsY x time-points NIfTI image with range [0,1] expressing the contrast of the stimulus image at each pixel over time.
+You need [Singularity/Apptainer](https://apptainer.org/) (the App runs in `brainlife/freesurfer:6.0.0`), [`jq`](https://jqlang.github.io/jq/), `FREESURFER_LICENSE`.
 
-The fMRI data can optionally be preprocessed with slice-timing correction and head motion correction.
+1. Clone this repository.
+2. Create `config.json` with the paths to your inputs and the parameters:
 
-Global signal regression of FMRI supported, converting signal to % change from baseline, either computing baseline for each voxel seperately (per-voxel normalization, 'pvn') or computing a global baseline (grand-mean scaling, 'gms').
+   ```json
+   {
+       "fmri": "/path/to/fMRI/fmri",
+       "events": "/path/to/fMRI/events",
+       "events_json": "/path/to/fMRI/events_json",
+       "sbref": "/path/to/fMRI/sbref",
+       "sbref_json": "/path/to/fMRI/sbref_json",
+       "physio": "/path/to/fMRI/physio",
+       "physio_json": "/path/to/fMRI/physio_json",
+       "stim": "/path/to/stim/stim",
+       "output": "/path/to/freesurfer/output",
+       "mask": "/path/to/mask/mask",
+       "frontal": false,
+       "temporal": false,
+       "parietal": false,
+       "occipital": true,
+       "preprocess": true,
+       "TR": "",
+       "stimsizeX": 16,
+       "stimsizeY": 16,
+       "gsr": "none",
+       "quickFit": false
+   }
+   ```
 
-### Authors
-- Justin Gardner (jlg@stanford.edu)
-- David Hunt (davhunt@indiana.edu)
+3. Run `./main`.
 
-### Project director
-- Franco Pestilli (franpest@indiana.edu)
+## Troubleshooting
 
-### Funding Acknowledgement
-brainlife.io is publicly funded and for the sustainability of the project it is helpful to Acknowledge the use of the platform. We kindly ask that you acknowledge the funding below in your publications and code reusing this code.
+- **Please set FREESURFER_LICENSE in .bashrc**: Provide a FreeSurfer license (FREESURFER_LICENSE).
+- **output missing**: Check the fMRI, stimulus and mask inputs and the MATLAB log.
 
-[![NSF-BCS-1734853](https://img.shields.io/badge/NSF_BCS-1734853-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1734853)
-[![NSF-BCS-1636893](https://img.shields.io/badge/NSF_BCS-1636893-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1636893)
-[![NSF-ACI-1916518](https://img.shields.io/badge/NSF_ACI-1916518-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1916518)
-[![NSF-IIS-1912270](https://img.shields.io/badge/NSF_IIS-1912270-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1912270)
-[![NIH-NIBIB-R01EB029272](https://img.shields.io/badge/NIH_NIBIB-R01EB029272-green.svg)](https://grantome.com/grant/NIH/R01-EB029272-01)
-
-### Citations
-We kindly ask that you cite the following articles when publishing papers and code using this code.
-
-1. Gardner, Justin L., Merriam, Elisha P., Schluppeck, Denis, Besle, Julien, & Heeger, David J. (2018, June 28). mrTools: Analysis and visualization package for functional magnetic resonance imaging data (Version 4.7). Zenodo. [http://doi.org/10.5281/zenodo.1299483](http://doi.org/10.5281/zenodo.1299483)
-
-1. Avesani, P., McPherson, B., Hayashi, S. et al. The open diffusion data derivatives, brain data upcycling via integrated publishing of derivatives and reproducible open cloud services. Sci Data 6, 69 (2019). [https://doi.org/10.1038/s41597-019-0073-y](https://doi.org/10.1038/s41597-019-0073-y)
-
-#### MIT Copyright (c) 2020 brainlife.io The University of Texas at Austin and Indiana University
-
-## Running the App 
-
-### For HCP subjects
+## For HCP subjects
 
 HCP subject voxel-wise fMRI data can be downloaded from db.humanconnectome.org.
 
 In a 7T subject's "7T_RET_fixextended" folder, preprocessed retinotopy BOLD data can be found at: MNINonLinear/Results/tfMRI_7T_RETCCW_AP_RETCW_PA_RETEXP_AP_RETCON_PA_RETBAR1_AP_RETBAR2_PA/tfMRI_7T_RETCCW_AP_RETCW_PA_RETEXP_AP_RETCON_PA_RETBAR1_AP_RETBAR2_PA_hp2000_clean.nii.gz
 
-### On Brainlife.io
+## Citing
 
-You can submit this App online at [https://doi.org/10.25663/brainlife.app.315](https://doi.org/10.25663/brainlife.app.315) via the "Execute" tab.
+If you use this App, please cite it, the software it builds on and brainlife.io:
 
-### Running Locally (on your machine)
+- pRFLife with mrTools. brainlife.io App. [doi:10.25663/brainlife.app.315](https://doi.org/10.25663/brainlife.app.315)
+- Gardner JL, Merriam EP, Schluppeck D, Besle J, Heeger DJ. mrTools: Analysis and visualization package for functional magnetic resonance imaging data (Version 4.7). Zenodo (2018).
+- Gardner, Justin L., Merriam, Elisha P., Schluppeck, Denis, Besle, Julien, & Heeger, David J. (2018, June 28). mrTools: Analysis and visualization package for functional magnetic resonance imaging data (Version 4.7). Zenodo. [http://doi.org/10.5281/zenodo.1299483](http://doi.org/10.5281/zenodo.1299483)
+- Fischl. FreeSurfer. *NeuroImage* 62:774-781 (2012). [doi:10.1016/j.neuroimage.2012.01.021](https://doi.org/10.1016/j.neuroimage.2012.01.021)
+- Hayashi S, Caron BA, Heinsfeld AS, et al. brainlife.io: a decentralized and open-source cloud platform to support neuroscience research. *Nature Methods* 21:809–813 (2024). [doi:10.1038/s41592-024-02237-2](https://doi.org/10.1038/s41592-024-02237-2)
+- Avesani P, McPherson B, Hayashi S, et al. The open diffusion data derivatives, brain data upcycling via integrated publishing of derivatives and reproducible open cloud services. *Scientific Data* 6:69 (2019). [doi:10.1038/s41597-019-0073-y](https://doi.org/10.1038/s41597-019-0073-y)
 
-1. git clone this repo.
-2. Inside the cloned directory, create `config.json` with something like the following content with paths to your input files.
+## Authors
 
-```json
-{
-    "frontal": false,
-    "temporal": false,
-    "parietal": false,
-    "occipital": true,
-    "preprocess": false,
-    "TR": "",
-    "stimsizeX": 16,
-    "stimsizeY": 16,
-    "gsr": "pvn",
-    "quickFit": false,
-    "fmri": [
-      "testdata/run1/fmri/bold.nii.gz",
-      "testdata/run2/fmri/bold.nii.gz",
-      "testdata/run3/fmri/bold.nii.gz",
-      "testdata/run4/fmri/bold.nii.gz"
-    ],
-    "events": [
-      "testdata/run1/fmri/events.tsv",
-      "testdata/run2/fmri/events.tsv",
-      "testdata/run3/fmri/events.tsv",
-      "testdata/run4/fmri/events.tsv"
-    ],
-    "stim": [
-      "testdata/run1/stim/stim.nii.gz",
-      "testdata/run2/stim/stim.nii.gz",
-      "testdata/run3/stim/stim.nii.gz",
-      "testdata/run4/stim/stim.nii.gz"
-    ],
-    "output": "/testdata/output"
-}
-```
+- Justin Gardner
+- David Hunt
 
-3. Launch the App by executing `main`
+**Project director**
 
-```bash
-./main
-```
+- Franco Pestilli
 
-## Output
+## Funding
 
-All output files will be generated under the current working directory (pwd). The main output of this App is the "prf" directory which contains NIFTI files polarAngle, eccentricity, receptive field size (rfWidth), and R2 of each voxel.
+[![Wellcome-226486/Z/22/Z](https://img.shields.io/badge/Wellcome-226486%2FZ%2F22%2FZ-purple.svg)](https://wellcome.org/)
+[![NIH-NINDS-U24NS140384](https://img.shields.io/badge/NIH_NINDS-U24NS140384-green.svg)](https://reporter.nih.gov/project-details/11261037)
+[![NIH-NINDS-UM1NS132207](https://img.shields.io/badge/NIH_NINDS-UM1NS132207-green.svg)](https://reporter.nih.gov/project-details/11411328)
+[![NIH-NIBIB-R01EB029272](https://img.shields.io/badge/NIH_NIBIB-R01EB029272-green.svg)](https://reporter.nih.gov/project-details/10262925)
+[![NIH-NIBIB-R01EB030896](https://img.shields.io/badge/NIH_NIBIB-R01EB030896-green.svg)](https://reporter.nih.gov/project-details/10428625)
+[![NIH-NIMH-R01MH126699](https://img.shields.io/badge/NIH_NIMH-R01MH126699-green.svg)](https://reporter.nih.gov/project-details/10460628)
+[![NIH-NIDCD-R01DC020088](https://img.shields.io/badge/NIH_NIDCD-R01DC020088-green.svg)](https://reporter.nih.gov/project-details/11140284)
+[![NSF-BCS-1734853](https://img.shields.io/badge/NSF_BCS-1734853-blue.svg)](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1734853)
+[![NSF-BCS-2203524](https://img.shields.io/badge/NSF_BCS-2203524-blue.svg)](https://www.nsf.gov/awardsearch/showAward?AWD_ID=2203524)
+[![NSF-IIS-1636893](https://img.shields.io/badge/NSF_IIS-1636893-blue.svg)](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1636893)
+[![NSF-OAC-2148729](https://img.shields.io/badge/NSF_OAC-2148729-blue.svg)](https://www.nsf.gov/awardsearch/showAward?AWD_ID=2148729)
+[![NSF-IIS-1912270](https://img.shields.io/badge/NSF_IIS-1912270-blue.svg)](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1912270)
+[![NSF-IIS-2148700](https://img.shields.io/badge/NSF_IIS-2148700-blue.svg)](https://www.nsf.gov/awardsearch/showAward?AWD_ID=2148700)
+[![NSF-OAC-1916518](https://img.shields.io/badge/NSF_OAC-1916518-blue.svg)](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1916518)
 
-### Dependencies
-
-This App only requires [singularity](https://www.sylabs.io/singularity/) to run.
-
-#### MIT Copyright (c) 2020 brainlife.io The University of Texas at Austin and Indiana University
+<sub>brainlife.io, which runs this App, is publicly funded by Wellcome, the U.S. National Institutes of Health and the U.S. National Science Foundation; acknowledging that support helps keep it running.</sub>
